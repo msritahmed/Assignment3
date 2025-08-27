@@ -1,0 +1,88 @@
+1. Project Setup
+
+Create a new React app:
+
+npx create-react-app keyword-analysis
+cd keyword-analysis
+
+
+Clean up boilerplate files.
+
+2. UI Design
+
+Input box: For entering a keyword.
+
+Button: “Analyze”.
+
+Display section: Show search volume & trend data.
+
+Styling: Use plain CSS / Tailwind / Bootstrap for neat UI.
+
+3. API Integration
+
+Since SEMrush is paid, for free alternatives:
+
+Google Trends API (unofficial): google-trends-api (works with Node.js, but you can set up a simple backend to proxy requests).
+
+Alternative free APIs:
+
+SerpApi (trial available)
+
+RapidAPI keyword APIs
+
+For simplicity, you can:
+
+Use Google Trends API (via backend):
+
+const googleTrends = require('google-trends-api');
+
+googleTrends.interestOverTime({ keyword: 'React JS', startTime: new Date('2024-01-01') })
+  .then(results => console.log(results))
+  .catch(err => console.error(err));
+
+
+Then send results to frontend via fetch().
+
+4. Frontend Example
+import React, { useState } from "react";
+
+function App() {
+  const [keyword, setKeyword] = useState("");
+  const [data, setData] = useState(null);
+
+  const handleSearch = async () => {
+    const response = await fetch(`/api/trends?keyword=${keyword}`);
+    const result = await response.json();
+    setData(result);
+  };
+
+  return (
+    <div className="app">
+      <h1>Keyword Analysis Tool</h1>
+      <input
+        type="text"
+        value={keyword}
+        placeholder="Enter a keyword"
+        onChange={(e) => setKeyword(e.target.value)}
+      />
+      <button onClick={handleSearch}>Analyze</button>
+
+      {data && (
+        <div className="results">
+          <h3>Search Trends for "{keyword}"</h3>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
+
+5. Deployment
+
+Push code to GitHub.
+
+Deploy frontend on Netlify or Vercel.
+
+If backend is needed, use Render / Railway.
